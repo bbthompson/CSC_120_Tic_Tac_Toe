@@ -34,12 +34,32 @@ def place_mark(row, col, playerId):
         board[row][col] = "O"
 
 
-# Set number of marked spaces on board to 0, maximum marks to 9, and player id to 1
+# Function to check for win
+def check_win(playerId):
+    win = False
+    # Check rows and columns for win
+    for i in range(len(board)):
+        # Check for 3 in a row horizontally
+        if (board[i][0] != "-") and (board[i][0] == board[i][1]) and (board[i][1] == board[i][2]):
+            win = True
+        # Check for 3 in a row vertically
+        elif (board[0][i] != "-") and (board[0][i] == board[1][i]) and (board[1][i] == board[2][i]):
+            win = True
+    # Check diagonals for win
+    if board[0][0] != "-" and board[0][0] == board[1][1] and board[1][1] == board[2][2]:
+        win = True
+    elif board[0][2] != "-" and board[0][2] == board[1][1] and board[1][1] == board[2][0]:
+        win = True
+    return win
+
+
+# Set number of marked spaces on board to 0, maximum marks to 9, player id to 1, and win to False
 MAXMARKS = 9
 playerId = 1
 markCount = 0
+win = False
 
-# While number of marks on board is less than 9 (board is not filled)
+# While board is not filled, allow players to make marks
 while markCount < MAXMARKS:
     # Print the board
     print_board()
@@ -52,6 +72,12 @@ while markCount < MAXMARKS:
         continue
     # Place the mark in the row and column on the board for the player
     place_mark(row, col, playerId)
+    # Check for win/Exit loop if game is over
+    if check_win(playerId):
+        print_board()
+        print("Player ", playerId, "wins! Game over!")
+        win = True
+        break
     # Switch players
     if playerId == 1:
         playerId = 2
@@ -60,5 +86,9 @@ while markCount < MAXMARKS:
     markCount = markCount + 1
 
 
-# Print filled board
-print_board()
+# Check for a draw
+if markCount == 9 and win == False:
+    print_board()
+    print("It's a draw!")
+
+
